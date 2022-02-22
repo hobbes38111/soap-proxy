@@ -48,6 +48,7 @@ public class Proxy {
         try {
             response = exchange(body, headers);
         } catch (Exception e) {
+            LOGGER.info("Received error, retrying", e);
             tokenService.refreshToken();
             response = exchange(body, headers);
         }

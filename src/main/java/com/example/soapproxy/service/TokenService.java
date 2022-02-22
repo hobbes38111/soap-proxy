@@ -2,6 +2,8 @@ package com.example.soapproxy.service;
 
 import com.example.soapproxy.configuration.SoapProxyProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class TokenService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
 
     private String token = "";
 
@@ -32,11 +35,15 @@ public class TokenService {
     }
 
     public void refreshToken() {
-        HttpEntity<LinkedMultiValueMap<String, String>> entity = createHttpEntity();
-
-        TokenResponse responseBody = executeRequest(entity);
-        assert responseBody != null;
-        this.token = responseBody.accessToken;
+        try {
+            LOGGER.info("Refreshing token");
+            HttpEntity<LinkedMultiValueMap<String, String>> entity = createHttpEntity();
+            TokenResponse responseBody = executeRequest(entity);
+            assert responseBody != null;
+            this.token = responseBody.accessToken;
+        } catch (Exception e) {
+            LOGGER.error("Error retrieving token", e);
+        }
     }
 
     private HttpEntity<LinkedMultiValueMap<String, String>> createHttpEntity() {
