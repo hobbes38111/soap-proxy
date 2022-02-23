@@ -17,6 +17,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
+import java.io.File;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -26,7 +27,7 @@ import java.security.cert.CertificateException;
 @Configuration
 public class RestTemplateConfiguration {
     @Value("${http.client.ssl.trust-store:emptyStore.keystore}")
-    private Resource keyStore;
+    private String keyStore;
     @Value("${http.client.ssl.trust-store-password:storePassword}")
     private String keyStorePassword;
 
@@ -70,7 +71,7 @@ public class RestTemplateConfiguration {
     private HttpComponentsClientHttpRequestFactory getRequestFactory() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, CertificateException, IOException {
         SSLContext sslContext = new SSLContextBuilder()
                 .loadTrustMaterial(
-                        keyStore.getURL(),
+                        new File(keyStore),
                         keyStorePassword.toCharArray()
                 ).build();
         SSLConnectionSocketFactory socketFactory =
