@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Set;
 
-import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
+import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 
 @RestController
 public class Proxy {
@@ -40,7 +40,7 @@ public class Proxy {
         this.soapClient = soapClient;
     }
 
-    @PostMapping(path = "/soap-proxy", produces = APPLICATION_XML_VALUE, consumes = APPLICATION_XML_VALUE)
+    @PostMapping(path = "/soap-proxy", produces = TEXT_XML_VALUE, consumes = TEXT_XML_VALUE)
     public ResponseEntity<String> soapProxy(@RequestBody String body, @RequestHeader MultiValueMap<String, String> headers) {
         LOGGER.info("body: {}, headers: {}", body, headers);
 
