@@ -20,10 +20,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -77,16 +79,34 @@ class ProxyTest {
     }
 
     @Test
+    void testEcho() throws Exception {
+        mvc.perform(get("http://localhost:{port}/", port))
+           .andDo(print())
+           .andExpect(content().string(containsString("server.port=0")))
+           .andExpect(content().string(containsString("http.client.ssl.trust-store-password=st*********rd")))
+        ;
+    }
+
+    @Test
+    void testEchoRoot() throws Exception {
+        mvc.perform(get("http://localhost:{port}", port))
+           .andDo(print())
+           .andExpect(content().string(containsString("server.port=0")))
+           .andExpect(content().string(containsString("http.client.ssl.trust-store-password=st*********rd")))
+        ;
+    }
+
+    @Test
     void echoMessage() throws Exception {
         mvc.perform(post("http://localhost:{port}/soap-proxy", port)
                             .accept(MediaType.APPLICATION_XML)
                             .contentType(MediaType.APPLICATION_XML)
                             .header("test-header", "test-value")
                             .content("TEST"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("TEST"))
-                .andExpect(header().string("test-header", "test-value"));
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(content().string("TEST"))
+           .andExpect(header().string("test-header", "test-value"));
     }
 
     @Test

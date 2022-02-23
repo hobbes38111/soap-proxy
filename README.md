@@ -5,6 +5,8 @@ and returns the response from the soap endpoint.
 
 In case a 401 is returned, the service retrieves a fresh token and retries.
 
+To inspect current running configuration, run GET http://hostname:port
+
 ## Building
 
 run .\mvnw clean package -DskipTests from project root, then pick up a jar from target directory.
