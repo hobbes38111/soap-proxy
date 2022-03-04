@@ -99,8 +99,8 @@ class ProxyTest {
     @Test
     void echoMessage() throws Exception {
         mvc.perform(post("http://localhost:{port}/soap-proxy", port)
-                            .accept(MediaType.APPLICATION_XML)
-                            .contentType(MediaType.APPLICATION_XML)
+                            .accept(MediaType.TEXT_XML)
+                            .contentType(MediaType.TEXT_XML)
                             .header("test-header", "test-value")
                             .content("TEST"))
            .andDo(print())
@@ -114,8 +114,8 @@ class ProxyTest {
         when(tokenService.getToken()).thenReturn("GOOD_TOKEN");
 
         mvc.perform(post("http://localhost:{port}/soap-proxy", port)
-                            .accept(MediaType.APPLICATION_XML)
-                            .contentType(MediaType.APPLICATION_XML)
+                            .accept(MediaType.TEXT_XML)
+                            .contentType(MediaType.TEXT_XML)
                             .content("TEST"))
            .andDo(print())
            .andExpect(status().isOk())
@@ -130,8 +130,8 @@ class ProxyTest {
         when(tokenService.getToken()).thenReturn("BAD_TOKEN", "GOOD_TOKEN");
 
         mvc.perform(post("http://localhost:{port}/soap-proxy", port)
-                            .accept(MediaType.APPLICATION_XML)
-                            .contentType(MediaType.APPLICATION_XML)
+                            .accept(MediaType.TEXT_XML)
+                            .contentType(MediaType.TEXT_XML)
                             .content("TEST"))
            .andDo(print())
            .andExpect(status().isOk())
@@ -146,8 +146,8 @@ class ProxyTest {
         when(tokenService.getToken()).thenReturn("BAD_DATA");
 
         mvc.perform(post("http://localhost:{port}/soap-proxy", port)
-                            .accept(MediaType.APPLICATION_XML)
-                            .contentType(MediaType.APPLICATION_XML)
+                            .accept(MediaType.TEXT_XML)
+                            .contentType(MediaType.TEXT_XML)
                             .content("BAD_DATA"))
            .andDo(print())
            .andExpect(status().isBadRequest());
@@ -160,8 +160,8 @@ class ProxyTest {
         when(tokenService.getToken()).thenReturn("SERVER_ERROR");
 
         mvc.perform(post("http://localhost:{port}/soap-proxy", port)
-                            .accept(MediaType.APPLICATION_XML)
-                            .contentType(MediaType.APPLICATION_XML)
+                            .accept(MediaType.TEXT_XML)
+                            .contentType(MediaType.TEXT_XML)
                             .content("SERVER_ERROR"))
            .andDo(print())
            .andExpect(status().is5xxServerError());
