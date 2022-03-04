@@ -22,8 +22,10 @@ The simplest way to provide configuration is to provide properties as command li
 
     java -jar soap-proxy.jar --soap-proxy.soap-endpoint=http://some-soap-endpoint ...
 
-* http.client.ssl.trust-store - trust store location
-* http.client.ssl.trust-store-password - trust store password
+* ~~http.client.ssl.trust-store - trust store location~~ __removed__ see soap-proxy.trust-store
+* ~~http.client.ssl.trust-store-password~~ __removed__ see soap-proxy.trust-store-password 
+* soap-proxy.trust-store - trust store location
+* soap-proxy.trust-store-password - trust store password
 * soap-proxy.soap-endpoint - whole url of the soap endpoint to forward to
 * soap-proxy.auth-redirect-uri - uri to send to authentication service as redirect
 * soap-proxy.auth-url - authentication url
@@ -33,4 +35,7 @@ The simplest way to provide configuration is to provide properties as command li
 * soap-proxy.trust-store - trust store location
 * soap-proxy.trust-store-password - trust store password in UTF-8
 * soap-proxy.protocol - SSL protocol to use
+* soap-proxy.connect-timeout - connect timeout in ms (default 5000)
+* soap-proxy.connection-request-timeout - connection request timeout in ms (default 5000)
+* soap-proxy.socket-timeout - socket timeout in ms (default 5000)
 * server.port - port on which to listen

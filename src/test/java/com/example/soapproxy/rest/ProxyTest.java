@@ -10,8 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -19,7 +19,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.badRequest;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -34,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
                 properties = {"soap-proxy.soap-endpoint=http://localhost:8081/soap"})
-@ActiveProfiles("notrust")
 @AutoConfigureMockMvc
 @WireMockTest(httpPort = 8081)
 class ProxyTest {
@@ -63,7 +61,13 @@ class ProxyTest {
 
         stubFor(WireMock.post("/soap")
                         .withHeader("Authorization", equalTo("Bearer BAD_TOKEN"))
-                        .willReturn(unauthorized()));
+                        .willReturn(aResponse()
+                                            .withStatus(401)
+                                            .withBody("1012116 - Invalid token.")
+                                            .withHeader(HttpHeaders.WWW_AUTHENTICATE, "OAuth realm=\"AKANA OAUTH LibertyGlobal\" error=\"1012116 - Invalid token.")
+                                            .withHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+                                            .withHeader(HttpHeaders.CONNECTION, "close")
+                        ));
 
         stubFor(WireMock.post("/soap")
                         .withHeader("Authorization", equalTo("Bearer BAD_DATA"))

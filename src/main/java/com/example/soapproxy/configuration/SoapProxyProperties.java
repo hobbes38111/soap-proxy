@@ -12,9 +12,12 @@ public class SoapProxyProperties {
     private String authGrantType;
     private String authClientId;
     private String authClientSecret;
-    private String trustStore;
-    private char[] trustStorePassword;
+    private String trustStore = "src/main/resources/emptyStore.keystore";
+    private String trustStorePassword = "storePassword";
     private String protocol;
+    private int connectTimeout = 5000;
+    private int connectionRequestTimeout = 5000;
+    private int socketTimeout = 5000;
 
     public String getSoapEndpoint() {
         return soapEndpoint;
@@ -72,11 +75,11 @@ public class SoapProxyProperties {
         this.trustStore = trustStore;
     }
 
-    public char[] getTrustStorePassword() {
+    public String getTrustStorePassword() {
         return trustStorePassword;
     }
 
-    public void setTrustStorePassword(char[] trustStorePassword) {
+    public void setTrustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
     }
 
@@ -86,5 +89,29 @@ public class SoapProxyProperties {
 
     public void setProtocol(String protocol) {
         this.protocol = protocol;
+    }
+
+    public int getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public void setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public int getConnectionRequestTimeout() {
+        return connectionRequestTimeout;
+    }
+
+    public void setConnectionRequestTimeout(int connectionRequestTimeout) {
+        this.connectionRequestTimeout = connectionRequestTimeout;
+    }
+
+    public int getSocketTimeout() {
+        return socketTimeout;
+    }
+
+    public void setSocketTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
     }
 }

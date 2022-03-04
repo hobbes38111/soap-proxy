@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -83,11 +84,9 @@ public class Proxy {
     public ResponseEntity<String> soapProxy(@RequestBody String body, @RequestHeader MultiValueMap<String, String> headers) {
         LOGGER.info("body: {}, headers: {}", body, headers);
 
-        ResponseEntity<String> response;
-        try {
-            response = exchange(body, headers);
-        } catch (Exception e) {
-            LOGGER.info("Received error, retrying", e);
+        var response = exchange(body, headers);
+
+        if (response.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
             tokenService.refreshToken();
             response = exchange(body, headers);
         }
